@@ -13,23 +13,25 @@ public class RepoPolizaTXT : IRepoPoliza
         */
         int n = 1;
         // el siguiente using solo se asegura de que aunque sea exista el archivo vacio
-        using StreamWriter sw = new StreamWriter(s_Archivo, append: true);
+        using (StreamWriter sw = new StreamWriter(s_Archivo, append: true)){}
         try
         {
             // abrir archivo de titulares
-            using StreamReader sr = new StreamReader(s_Archivo);
-            string l = "";
-            // recorrerlo hasta el final
-            while (!sr.EndOfStream)
-            {
-                l = sr.ReadLine();
+            using (StreamReader sr = new StreamReader(s_Archivo)){
+                string l = "";
+                // recorrerlo hasta el final
+                while (!sr.EndOfStream)
+                {
+                    l = sr.ReadLine();
+                }
+                // ID es lo primero que hay hasta el primer : asi q lo buscamos
+                int i = l.IndexOf(":");
+                // establecemos el valor de ID en la ultima econtrada +1
+                n = int.Parse(l.Substring(0, i)) + 1;
             }
-            // ID es lo primero que hay hasta el primer : asi q lo buscamos
-            int i = l.IndexOf(":");
-            // establecemos el valor de ID en la ultima econtrada +1
-            n = int.Parse(l.Substring(0, i)) + 1;
         }
-        catch { Console.WriteLine("No se pudo recuperar ningun ID"); }
+        catch { //Console.WriteLine("No se pudo recuperar ningun ID"); 
+        }
         return n;
     }
 
@@ -38,10 +40,11 @@ public class RepoPolizaTXT : IRepoPoliza
         try
         {
             // usamos append:true para que las lineas se escriban al final del archivo y no que se sobreescriba
-            using StreamWriter sw = new StreamWriter(s_Archivo, append: true);
-            P.ID = ID; // asignamos la ID
-            ID++; // incrementamos para la proxima
-            sw.WriteLine(P.ToString());
+            using (StreamWriter sw = new StreamWriter(s_Archivo, append: true)){
+                P.ID = ID; // asignamos la ID
+                ID++; // incrementamos para la proxima
+                sw.WriteLine(P.ToString());
+            }
         }
         catch (Exception e)
         {
@@ -55,14 +58,21 @@ public class RepoPolizaTXT : IRepoPoliza
         try
         {
             // abrimos en modo lectura
-            using StreamReader sr = new StreamReader(s_Archivo);
-            // leemos todo el archivo
-            string str = sr.ReadToEnd();
+            string str;
+            using (StreamReader sr = new StreamReader(s_Archivo)){
+                // leemos todo el archivo
+                str = sr.ReadToEnd();
+            }
             // comprobamos de forma general si existe la ID buscada
             if (str.IndexOf(P.ID + ":") != -1)
             {
                 // si existe buscamos la linea que le corresponde
                 string[] polizas = str.Split('\n');
+                for (int j = 0; j < polizas.Length; j++)
+                {
+                    polizas[j] = polizas[j].ReplaceLineEndings(""); // elimina todo salto de linea
+                    //Console.WriteLine($"Linea {j}: "+polizas[j]);
+                }
                 int indice = -1;
                 int i = 0;
                 while (indice == -1)
@@ -76,10 +86,13 @@ public class RepoPolizaTXT : IRepoPoliza
                 // sobrescribimos el vehiculo viejo con el nuevo
                 polizas[indice] = P.ToString();
                 // rescribimos el archivo con el vehiculo modificado
-                using StreamWriter sw = new StreamWriter(s_Archivo);
-                foreach (string poliza in polizas)
-                {
-                    sw.WriteLine(poliza);
+                using (StreamWriter sw = new StreamWriter(s_Archivo)){
+                    foreach (string poliza in polizas)
+                    {
+                        if(poliza != ""){// solo vuelve a guardar los campos que tienen datos realmente
+                            sw.WriteLine(poliza);
+                        }
+                    }
                 }
             }
             else
