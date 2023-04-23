@@ -1,5 +1,5 @@
 namespace Aseguradora.Aplicacion;
-class AgregarTerceroUseCase
+public class AgregarTerceroUseCase
 {
     IRepoTercero _repo;
     public AgregarTerceroUseCase(IRepoTercero repo)

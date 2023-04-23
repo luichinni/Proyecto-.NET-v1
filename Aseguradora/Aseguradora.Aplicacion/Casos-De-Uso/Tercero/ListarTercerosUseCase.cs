@@ -1,5 +1,5 @@
 namespace Aseguradora.Aplicacion;
-class ListarTercerosUseCase
+public class ListarTercerosUseCase
 {
     IRepoTercero _repo;
     public ListarTercerosUseCase(IRepoTercero repo)

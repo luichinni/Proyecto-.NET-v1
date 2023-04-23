@@ -1,5 +1,5 @@
 namespace Aseguradora.Aplicacion;
-class EliminarVehiculoUseCase
+public class EliminarVehiculoUseCase
 {
     IRepoVehiculo _repo;
     public EliminarVehiculoUseCase(IRepoVehiculo repo)

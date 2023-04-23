@@ -1,5 +1,5 @@
 namespace Aseguradora.Aplicacion;
-class ListarSiniestrosUseCase
+public class ListarSiniestrosUseCase
 {
     IRepoSiniestro _repo;
     public ListarSiniestrosUseCase(IRepoSiniestro repo)

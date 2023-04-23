@@ -1,5 +1,5 @@
 namespace Aseguradora.Aplicacion;
-class EliminarSiniestroUseCase
+public class EliminarSiniestroUseCase
 {
     IRepoSiniestro _repo;
     public EliminarSiniestroUseCase(IRepoSiniestro repo)

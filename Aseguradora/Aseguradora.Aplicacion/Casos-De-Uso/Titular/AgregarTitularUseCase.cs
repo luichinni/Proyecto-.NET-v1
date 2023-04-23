@@ -1,5 +1,5 @@
 namespace Aseguradora.Aplicacion;
-class AgregarTitularUseCase
+public class AgregarTitularUseCase
 {
     IRepoTitular _repo;
     public AgregarTitularUseCase(IRepoTitular repo)

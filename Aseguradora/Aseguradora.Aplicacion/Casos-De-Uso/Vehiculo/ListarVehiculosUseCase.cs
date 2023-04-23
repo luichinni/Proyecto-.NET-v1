@@ -1,5 +1,5 @@
 namespace Aseguradora.Aplicacion;
-class ListarVehiculosUseCase
+public class ListarVehiculosUseCase
 {
     IRepoVehiculo _repo;
     public ListarVehiculosUseCase(IRepoVehiculo repo)

@@ -1,5 +1,5 @@
 namespace Aseguradora.Aplicacion;
-class ModificarPolizaUseCase
+public class ModificarPolizaUseCase
 {
     IRepoPoliza _repo;
     public ModificarPolizaUseCase(IRepoPoliza repo)

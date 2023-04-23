@@ -1,5 +1,5 @@
 namespace Aseguradora.Aplicacion;
-class EliminarTerceroUseCase
+public class EliminarTerceroUseCase
 {
     IRepoTercero _repo;
     public EliminarTerceroUseCase(IRepoTercero repo)
