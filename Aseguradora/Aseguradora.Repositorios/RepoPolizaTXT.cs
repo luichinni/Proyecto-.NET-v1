@@ -102,8 +102,12 @@ public class RepoPolizaTXT : IRepoPoliza
         }
         catch (Exception e)
         {
-            Console.WriteLine("RIP en Modificar Poliza");
-            Console.WriteLine(e.Message);
+            if(e.Message == $"No existe la poliza con ID: {P.ID}"){
+                throw e;
+            }else{
+                Console.WriteLine("RIP en Modificar Poliza");
+                Console.WriteLine(e.Message);
+            }
         }
     }
 

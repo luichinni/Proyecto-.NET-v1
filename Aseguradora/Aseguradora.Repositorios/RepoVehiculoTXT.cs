@@ -102,8 +102,12 @@ public class RepoVehiculoTXT : IRepoVehiculo
         }
         catch (Exception e)
         {
-            Console.WriteLine("RIP en Modificar Vehiculo");
-            Console.WriteLine(e.Message);
+            if(e.Message == $"No exise el vehiculo con ID: {V.ID}"){
+                throw e;
+            }else{
+                Console.WriteLine("RIP en Modificar Vehiculo");
+                Console.WriteLine(e.Message);
+            }
         }
     }
 
