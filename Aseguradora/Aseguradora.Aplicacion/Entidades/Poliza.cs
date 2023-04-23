@@ -18,4 +18,11 @@ public class Poliza
         VigenteDesde = vigenteDesde;
         VigenteHasta = vigenteHasta;
     }
+
+    public override string ToString()
+    {
+        return  $"{ID}: VehiculoAsegurado:{VehiculoAsegurado} ValorAsegurado:{ValorAsegurado}"+
+                $" Franquicia:{Franquicia} Cobertura:{Cobertura} VigenteDesde:{VigenteDesde:d}"+
+                $" VigenteHasta:{VigenteHasta:d}";
+    }
 }
