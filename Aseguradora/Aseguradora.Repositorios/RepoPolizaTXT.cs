@@ -18,16 +18,16 @@ public class RepoPolizaTXT : IRepoPoliza
         {
             // abrir archivo de titulares
             using (StreamReader sr = new StreamReader(s_Archivo)){
-                string l = "";
+                string? l = "";
                 // recorrerlo hasta el final
                 while (!sr.EndOfStream)
                 {
                     l = sr.ReadLine();
                 }
                 // ID es lo primero que hay hasta el primer : asi q lo buscamos
-                int i = l.IndexOf(":");
+                int i = l!=null ? l.IndexOf(":") : -1;
                 // establecemos el valor de ID en la ultima econtrada +1
-                n = int.Parse(l.Substring(0, i)) + 1;
+                n = (l != null) && (i != -1) ? int.Parse(l.Substring(0, i)) + 1 : 1;
             }
         }
         catch { //Console.WriteLine("No se pudo recuperar ningun ID"); 
