@@ -107,12 +107,64 @@ public class RepoTitularTXT : IRepoTitular{
         }
     }
     
-    public void EliminarTitular(Titular T){
-        // ESTO LO HACE NICKY NICOLE
+    public void EliminarTitular(Titular T){  
+        try{
+            //leo todo el archivo y lo guardo en texto
+            string texto;
+            using(StreamReader sr = new StreamReader(s_Archivo)){
+                texto = sr.ReadToEnd();
+            }
+
+            //busco el titular, teniendo en cuenta el dni
+            //IndexOf indica el índice de base cero de la primera aparición de un carácter Unicode especificado o de una cadena en la instancia en cuestión. El método devuelve -1, si el carácter o cadena no se encuentran en esta instancia. 
+            int indice = texto.IndexOf(T.DNI);
+
+            //si encontre el titular a borrar
+            if(indice != -1){
+                //guardo en un vector el archivo donde c/pos tiene una linea 
+                string [] vector = texto.Split("/n");
+                //abro el archivo para leer
+                using(StreamWriter sw = new StreamWriter(s_Archivo)){
+                    //recorro el vector y si encuentro el titular a borrar directamente no lo escribo en el texto
+                    for(int i=0; i < vector.Length; i++){
+                        if( vector[i].IndexOf(T.DNI) != -1) 
+                            sw.WriteLine(vector[i]);
+                    }
+                }
+            }
+            else{
+                throw new Exception("No se encontro titular a borrar");
+            }
+        }
+        catch(Exception e)
+            Console.WriteLine(e.Message);
     }
 
     public List<Titular> ListarTitulares(){
-        // ESTO LO HACE NICKY NICOLE
+        /*
+
+        //hace falta chequear q mi archino no ta vacio?
+
+        
+        List<Titular> lista=new List<Titular>();
+        string linea;
+        Titular t;
+
+        using(StreamReader sr = new StreamReader(s_Archivo)){
+            while(! sr.EndOfStream){
+                linea = sr.ReadLine();
+
+                //esta bien si con ese string voy buscando campo x campo y asignandole esos 
+                //valores a la variable de tipo Titular asi despues agregarlo a la lista de ese tipo?
+
+                
+                //TENGO Q DEVOLVER DE TIPO TITULAR
+                lista.Add(t);
+            }
+        }
+        
+        */
+        
         return null;
     }
 }
