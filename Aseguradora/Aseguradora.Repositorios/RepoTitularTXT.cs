@@ -161,7 +161,7 @@ public class RepoTitularTXT : IRepoTitular{
                 string[]? vector = linea != null ? linea.Split(' ',':') : null;
                 
                 if(vector != null){
-                    t = new Titular(vector[2],vector[4],vector[6]);
+                    t = new Titular(vector[2],vector[4],vector[6]){ID=int.Parse(vector[0])};
                 
                     for(int i = 7; i < vector.Count(); i++){
                         switch(vector[i]){
