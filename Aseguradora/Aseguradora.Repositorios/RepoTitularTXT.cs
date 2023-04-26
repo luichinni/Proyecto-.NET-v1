@@ -133,7 +133,7 @@ public class RepoTitularTXT : IRepoTitular{
                     //recorro el vector y si encuentro el titular a borrar directamente no lo escribo en el texto
                     for (int i = 0; i < vector.Length; i++)
                     {
-                        if (vector[i].IndexOf(T.DNI) != -1)
+                        if (vector[i].IndexOf(T.DNI) == -1)
                             sw.WriteLine(vector[i]);
                     }
                 }
