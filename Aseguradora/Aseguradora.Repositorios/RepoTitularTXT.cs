@@ -108,7 +108,6 @@ public class RepoTitularTXT : IRepoTitular{
     }
     
     public void EliminarTitular(int ID){
-        // ESTO LO HACE NICKY NICOLE
         try
         {
             //leo todo el archivo y lo guardo en texto
@@ -140,7 +139,7 @@ public class RepoTitularTXT : IRepoTitular{
             }
             else
             {
-                throw new Exception("No se encontro titular a borrar");
+                throw new Exception($"No se encontro titular con ID = {ID} para eliminar");
             }
         }
         catch (Exception e){
