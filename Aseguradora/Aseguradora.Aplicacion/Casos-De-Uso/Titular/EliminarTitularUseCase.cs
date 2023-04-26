@@ -8,6 +8,6 @@ public class EliminarTitularUseCase
     }
     public void Ejecutar(Titular T)
     {
-        _repo.EliminarTitular(T);
+        _repo.EliminarTitular(T.DNI);
     }
 }
