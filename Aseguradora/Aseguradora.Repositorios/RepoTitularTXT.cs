@@ -39,7 +39,7 @@ public class RepoTitularTXT : IRepoTitular{
             using (StreamReader sr = new StreamReader(s_Archivo)){
                 str = sr.ReadToEnd(); // leemos todo el archivo
             }
-            int i = str.IndexOf(T.DNI); // buscamos el DNI
+            int i = str.IndexOf( T.DNI.ToString() ); // buscamos el DNI
             if(i != -1){ // si ya existe lo modificamos
                 Console.WriteLine($"Ya existe el titular con DNI:{T.DNI}");
                 Console.WriteLine($"Modificando el titular con DNI:{T.DNI}");
@@ -67,7 +67,7 @@ public class RepoTitularTXT : IRepoTitular{
                 str = sr.ReadToEnd();
             }
             // comprobamos de forma general si existe el DNI buscado
-            if(str.IndexOf(T.DNI) != -1){
+            if(str.IndexOf( T.DNI.ToString() ) != -1){
                 // si existe buscamos la linea que le corresponde
                 string[] titulares = str.Split('\n'); // nota: al hacer split quedan algunos campos vacios
                 for(int j=0;j<titulares.Length;j++){
@@ -77,7 +77,7 @@ public class RepoTitularTXT : IRepoTitular{
                 int indice = -1;
                 int i = 0;
                 while(indice == -1){
-                    if(titulares[i].IndexOf(T.DNI) != -1){
+                    if(titulares[i].IndexOf( T.DNI.ToString() ) != -1){
                         indice = i;
                     }
                     i++;
@@ -107,7 +107,7 @@ public class RepoTitularTXT : IRepoTitular{
         }
     }
     
-    public void EliminarTitular(Titular T){
+    public void EliminarTitular(int ID){
         // ESTO LO HACE NICKY NICOLE
         try
         {
@@ -120,7 +120,7 @@ public class RepoTitularTXT : IRepoTitular{
 
             //busco el titular, teniendo en cuenta el dni
             //IndexOf indica el índice de base cero de la primera aparición de un carácter Unicode especificado o de una cadena en la instancia en cuestión. El método devuelve -1, si el carácter o cadena no se encuentran en esta instancia. 
-            int indice = texto.IndexOf(T.DNI);
+            int indice = texto.IndexOf( ID.ToString() );
 
             //si encontre el titular a borrar
             if (indice != -1)
@@ -133,7 +133,7 @@ public class RepoTitularTXT : IRepoTitular{
                     //recorro el vector y si encuentro el titular a borrar directamente no lo escribo en el texto
                     for (int i = 0; i < vector.Length; i++)
                     {
-                        if (vector[i].IndexOf(T.DNI) == -1)
+                        if (vector[i].IndexOf( ID.ToString() ) == -1)
                             sw.WriteLine(vector[i]);
                     }
                 }
