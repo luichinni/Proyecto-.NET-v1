@@ -138,7 +138,7 @@ public class RepoPolizaTXT : IRepoPoliza
                 }
             }
             else{
-                throw new Exception("No se encontro ID eliminar");
+                throw new Exception($"No se encontro poliza con ID = {ID} para eliminar");
             }
         }
         catch(Exception e){
