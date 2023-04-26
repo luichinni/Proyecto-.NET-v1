@@ -10,7 +10,8 @@ public class Titular : Persona
     public override string? Telefono {get; set;}
     public string? Email {get; set;}
     public List<int> ListaVehiculos {get;set;}
-    public Titular(string dni, string apellido, string nombre){
+    
+    public Titular(int dni, string apellido, string nombre){
         DNI = dni;
         Apellido = apellido;
         Nombre = nombre;
