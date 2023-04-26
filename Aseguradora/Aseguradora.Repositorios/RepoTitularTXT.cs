@@ -15,7 +15,7 @@ public class RepoTitularTXT : IRepoTitular{
         try{
             // abrir archivo de titulares
             using (StreamReader sr = new StreamReader(s_Archivo)){
-                string? l = "";
+                string? l="";
                 // recorrerlo hasta el final
                 while (!sr.EndOfStream)
                 {
@@ -107,11 +107,14 @@ public class RepoTitularTXT : IRepoTitular{
         }
     }
     
-    public void EliminarTitular(Titular T){  
-        try{
+    public void EliminarTitular(Titular T){
+        // ESTO LO HACE NICKY NICOLE
+        try
+        {
             //leo todo el archivo y lo guardo en texto
             string texto;
-            using(StreamReader sr = new StreamReader(s_Archivo)){
+            using (StreamReader sr = new StreamReader(s_Archivo))
+            {
                 texto = sr.ReadToEnd();
             }
 
@@ -120,51 +123,83 @@ public class RepoTitularTXT : IRepoTitular{
             int indice = texto.IndexOf(T.DNI);
 
             //si encontre el titular a borrar
-            if(indice != -1){
+            if (indice != -1)
+            {
                 //guardo en un vector el archivo donde c/pos tiene una linea 
-                string [] vector = texto.Split("/n");
+                string[] vector = texto.Split("/n");
                 //abro el archivo para leer
-                using(StreamWriter sw = new StreamWriter(s_Archivo)){
+                using (StreamWriter sw = new StreamWriter(s_Archivo))
+                {
                     //recorro el vector y si encuentro el titular a borrar directamente no lo escribo en el texto
-                    for(int i=0; i < vector.Length; i++){
-                        if( vector[i].IndexOf(T.DNI) != -1) 
+                    for (int i = 0; i < vector.Length; i++)
+                    {
+                        if (vector[i].IndexOf(T.DNI) != -1)
                             sw.WriteLine(vector[i]);
                     }
                 }
             }
-            else{
+            else
+            {
                 throw new Exception("No se encontro titular a borrar");
             }
         }
-        catch(Exception e)
-            Console.WriteLine(e.Message);
+        catch (Exception e){
+            Console.WriteLine(e.Message);}
     }
 
     public List<Titular> ListarTitulares(){
-        /*
+        // ESTO LO HACE NICKY NICOLE
 
-        //hace falta chequear q mi archino no ta vacio?
-
-        
         List<Titular> lista=new List<Titular>();
-        string linea;
+        string? linea;
         Titular t;
-
         using(StreamReader sr = new StreamReader(s_Archivo)){
             while(! sr.EndOfStream){
                 linea = sr.ReadLine();
-
                 //esta bien si con ese string voy buscando campo x campo y asignandole esos 
-                //valores a la variable de tipo Titular asi despues agregarlo a la lista de ese tipo?
-
+                 
+                string[]? vector = linea != null ? linea.Split(' ',':') : null;
                 
-                //TENGO Q DEVOLVER DE TIPO TITULAR
-                lista.Add(t);
+                if(vector != null){
+                    t = new Titular(vector[2],vector[4],vector[6]);
+                
+                    for(int i = 7; i < vector.Count(); i++){
+                        switch(vector[i]){
+                            case "Direccion":
+                                string aux;
+                                string campo = "";
+                                //estoy en la pos direccion asi q me interesa la siguiente
+                                i++;
+                                //tengo que leer el vector hasta que encuentre telefono o email
+                                aux = vector[i];
+
+                                while( ( aux != "Telefono")&&( aux != "Email")&&( aux != "ListaVehiculos") ){
+                                    campo += aux+" "; 
+                                    i++;
+                                    aux = vector[i];
+                                }
+
+                                t.Direccion = campo;
+                                break;  
+                            case "Telefono":
+                                i++;
+                                t.Telefono = vector[i];
+                                break;
+                            case "Email":
+                                i++;
+                                t.Email = vector[i];
+                                break;
+                            case "ListaVehiculos":
+
+                                break;
+                        }
+
+                    }
+                    lista.Add(t);
+                }
             }
         }
-        
-        */
-        
-        return null;
+
+        return lista;
     }
 }
