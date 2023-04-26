@@ -113,8 +113,39 @@ public class RepoVehiculoTXT : IRepoVehiculo
 
     public void EliminarVehiculo(Vehiculo V)
     {
-        // ESTO LO HACE NICKY NICOLE
+       try{
+            string texto;
+            using(StreamReader sr = new StreamReader(s_Archivo) ){
+                texto = sr.ReadToEnd();
+            }
+
+            //busco si existe el id
+            //IndexOf solo trabaja con strings/char
+            int indice = texto.IndexOf( ID.ToString() );
+
+            if( indice != -1){
+
+                string [] vectorLineas = texto.Split("/n");
+
+                using(StreamWriter sw = new StreamWriter(s_Archivo) ){
+
+                    for(int i=0; i < vectorLineas.Count(); i++){
+                        //si no encunetro el elem a eliminar,lo agrego
+                        if(vectorLineas[i].IndexOf( ID.ToString() ) == -1){
+                            sw.WriteLine( vectorLineas[i] );
+                        }
+                    }
+                }
+            }
+            else{
+                throw new Exception($"No existe el vehiculo con ID = { ID } para eliminar");
+            }
+        }
+        catch(Exception e){
+            Console.WriteLine( e.Message );
+        } 
     }
+
 
     public List<Vehiculo> ListarVehiculos()
     {
