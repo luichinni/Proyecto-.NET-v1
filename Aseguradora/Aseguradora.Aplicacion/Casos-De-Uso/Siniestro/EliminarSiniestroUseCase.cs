@@ -8,6 +8,6 @@ public class EliminarSiniestroUseCase
     }
     public void Ejecutar(Siniestro S)
     {
-        _repo.EliminarSiniestro(S);
+        _repo.EliminarSiniestro(S.ID);
     }
 }
