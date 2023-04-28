@@ -147,9 +147,74 @@ public class RepoVehiculoTXT : IRepoVehiculo
     }
 
 
+
     public List<Vehiculo> ListarVehiculos()
     {
-        // ESTO LO HACE NICKY NICOLE
-        return null;
+        List<Vehiculo> lista=new List<Vehiculo>();
+        string? linea;
+        
+        using(StreamReader sr = new StreamReader(s_Archivo)){
+            while(! sr.EndOfStream){
+                linea = sr.ReadLine();
+
+                string []? vector = linea != null ? linea.Split(' ',':') : null;
+
+                if(vector != null){
+                    //no puedo usar el constructor porque mis primeras variables del texto son string con dimension variable
+                    //el id se que esta en el principio
+
+                    //LAS INSTANCIE CON UN VALOR X,ESTA BIEN ??????????????????
+                    string dominio="",marca ="";
+                    int ano=-1,titular= -1;
+
+                    for(int i=1; i < vector.Count(); i++){
+                        switch(vector[i]){
+                            case "Dominio":
+                                i++;
+                                string auxD;
+                                string campoD = "";
+                                //en aux me va quedando los campos q voy leyendo del vector
+                                auxD = vector[i];
+                                //si lo que leo pertenece a dominio lo voy agregando al string
+                                while( ( auxD != "Marca")&&( auxD != "AnoFabricacion")&&( auxD != "Titular") ){
+                                    campoD += auxD+" "; 
+                                    i++;
+                                    auxD = vector[i];
+                                }
+                                dominio = campoD;
+                                break;
+
+                            case "Marca":
+                                i++;
+                                string auxM;
+                                string campoM = "";
+                                auxM = vector[i];
+                                while(( auxM != "AnoFabricacion")&&( auxM != "Titular") ){
+                                    campoM += auxM+" "; 
+                                    i++;
+                                    auxM = vector[i];
+                                }
+                                marca = campoM;
+                                break;
+
+                            case "AnoFabricacion":
+                                i++;
+                                ano = int.Parse(vector[i]);
+                                break;
+
+                            case "Titular":
+                                i++;
+                                titular = int.Parse(vector[i]);
+                                break;
+                        }
+                       
+                    }
+                    Vehiculo v = new Vehiculo(dominio,marca,ano,titular);
+
+                    lista.Add(v);
+                }
+            }
+        }
+        return lista;
     }
 }
