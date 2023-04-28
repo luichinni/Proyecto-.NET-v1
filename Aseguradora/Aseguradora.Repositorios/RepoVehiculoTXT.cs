@@ -209,7 +209,7 @@ public class RepoVehiculoTXT : IRepoVehiculo
                         }
                        
                     }
-                    Vehiculo v = new Vehiculo(dominio,marca,ano,titular);
+                    Vehiculo v = new Vehiculo(dominio,marca,ano,titular){ID=int.Parse(vector[0])};
 
                     lista.Add(v);
                 }
