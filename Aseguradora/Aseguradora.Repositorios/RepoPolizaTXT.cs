@@ -149,7 +149,82 @@ public class RepoPolizaTXT : IRepoPoliza
 
     public List<Poliza> ListarPolizas()
     {
-        // ESTO LO HACE NICKY NICOLE
-        return null;
+        List<Poliza> lista = new List<Poliza>();
+
+        string? linea;
+        using(StreamReader sr = new StreamReader(s_Archivo)){
+            while(! sr.EndOfStream ){
+                linea = sr.ReadLine();
+
+                string []? vector = linea != null ? linea.Split(' ',':'): null;
+
+                if(vector != null){
+                    //variables para instanciar depsues el objeto
+                    int vehiculo = -1;
+                    double valor = -1;
+                    string franquicia= "",cobertura = "";
+                    DateTime desde = new DateTime(-1,-1,-1);
+                    DateTime hasta = new DateTime( -1,-1,-1);
+
+                    for(int i=1; i < vector.Count(); i++){
+                        switch(vector[i]){
+                            case "VehiculoAsegurado":
+                                i++;
+                                vehiculo = int.Parse(vector[i]);
+                                break;
+                            
+                            case "ValorAsegurado":
+                                i++;
+                                valor = int.Parse(vector[i]);
+                                break;
+                            case "Franquicia":
+                                i++;
+                                string auxF = "";
+
+                                while( ( vector[i] != "cobertura")&&( vector[i] != "VigenteDesde")&&( vector[i] != "VigenteHasta") ){
+                                    auxF += vector[i] + " ";
+                                    i++;
+                                }
+
+                                franquicia = auxF;
+                                 break;
+                            
+                            case "Cobertura":
+                                i++;
+                                string auxC ="";
+
+                                while( ( vector[i] != "VigenteDesde")&&(vector[i] != "VigenteHasta") ){
+                                    auxC += vector[i] + " ";
+                                    i++;
+                                }
+
+                                cobertura = auxC;
+                                break;
+                            case "VigenteDesde":
+                                //se usa el formato DateTime(Int32, Int32, Int32)->  año/mes/día
+                                i++;
+                                string []? vectorDesde = vector[i] != null? vector[i].Split('/') : null;
+                                if( vectorDesde != null){
+                                    desde = new DateTime(int.Parse(vectorDesde[0]),int.Parse(vectorDesde[1]),int.Parse(vectorDesde[2]));
+                                }
+                                break;
+                            case "VigenteHasta":
+                                //se usa el formato DateTime(Int32, Int32, Int32)->  año/mes/día
+                                i++;
+                                string []? vectorHasta = vector[i] != null? vector[i].Split('/') : null;
+                                if( vectorHasta != null){
+                                    hasta = new DateTime(int.Parse(vectorHasta[0]),int.Parse(vectorHasta[1]),int.Parse(vectorHasta[2]));
+                                }
+                                break;
+                        }
+                    }
+                    
+                    Poliza p = new Poliza(vehiculo,valor,franquicia,cobertura,desde,hasta){ID = int.Parse(vector[0])};
+
+                    lista.Add(p);
+                }
+            }
+        }
+        return lista;
     }
 }
