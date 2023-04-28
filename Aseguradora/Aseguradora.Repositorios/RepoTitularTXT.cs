@@ -147,8 +147,6 @@ public class RepoTitularTXT : IRepoTitular{
     }
 
     public List<Titular> ListarTitulares(){
-        // ESTO LO HACE NICKY NICOLE
-
         List<Titular> lista=new List<Titular>();
         string? linea;
         Titular t;
@@ -157,10 +155,10 @@ public class RepoTitularTXT : IRepoTitular{
                 linea = sr.ReadLine();
                 //esta bien si con ese string voy buscando campo x campo y asignandole esos 
                  
-                string[]? vector = linea != null ? linea.Split(' ',':') : null;
+                string[]? vector = linea != null ? linea.Split(' ',':',',') : null;
                 
                 if(vector != null){
-                    t = new Titular(vector[2],vector[4],vector[6]){ID=int.Parse(vector[0])};
+                    t = new Titular(int.Parse(vector[2]),vector[4],vector[6]){ID=int.Parse(vector[0])};
                 
                     for(int i = 7; i < vector.Count(); i++){
                         switch(vector[i]){
@@ -189,7 +187,12 @@ public class RepoTitularTXT : IRepoTitular{
                                 t.Email = vector[i];
                                 break;
                             case "ListaVehiculos":
-
+                                //listaDeVehiculos es una lista<int>
+                                i++;
+                                List<int> listita = new List<int>();
+                                for(int j= i; i < vector.Count(); j++)
+                                    listita.Add(int.Parse(vector[j]));                     
+                                t.ListaVehiculos = listita;
                                 break;
                         }
 
@@ -198,7 +201,6 @@ public class RepoTitularTXT : IRepoTitular{
                 }
             }
         }
-
         return lista;
     }
 }
