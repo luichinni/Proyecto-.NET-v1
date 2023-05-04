@@ -73,6 +73,7 @@ public class RepoVehiculoTXT : IRepoVehiculo
                 V.ID = ID; // asignamos la ID
                 ID++; // incrementamos para la proxima
                 sw.WriteLine(V.ToString());
+                aumentarID();
             }
         }
         catch (Exception e)
