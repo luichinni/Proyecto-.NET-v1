@@ -5,34 +5,63 @@ using System.IO;
 public class RepoPolizaTXT : IRepoPoliza
 {
     static string s_Archivo { get; } = "Poliza.txt";
+    static string s_AIDIS { get; } = "AlmacenDeIds.txt";
     int ID { get; set; } = obtenerID();
-    static int obtenerID()
+    private static int obtenerID()
     {
         /*
         Obtener ID restablece el contador de ID's si el programa se reinicia
         */
         int n = 1;
         // el siguiente using solo se asegura de que aunque sea exista el archivo vacio
-        using (StreamWriter sw = new StreamWriter(s_Archivo, append: true)){}
+        using (StreamWriter sw = new StreamWriter(s_AIDIS, append: true)) { }
         try
         {
             // abrir archivo de titulares
-            using (StreamReader sr = new StreamReader(s_Archivo)){
+            using (StreamReader sr = new StreamReader(s_AIDIS))
+            {
                 string? l = "";
+
                 // recorrerlo hasta el final
-                while (!sr.EndOfStream)
+                while (!sr.EndOfStream && l != null && !(l.IndexOf("Poliza:") != -1))
                 {
                     l = sr.ReadLine();
                 }
                 // ID es lo primero que hay hasta el primer : asi q lo buscamos
-                int i = l!=null ? l.IndexOf(":") : -1;
+                int i = l != null ? l.IndexOf("Poliza:")+7 : -1;
                 // establecemos el valor de ID en la ultima econtrada +1
-                n = (l != null) && (i != -1) ? int.Parse(l.Substring(0, i)) + 1 : 1;
+                n = (l != null) && (i != -1) ? int.Parse(l.Substring(i).ReplaceLineEndings("")) : 1;
             }
         }
-        catch { //Console.WriteLine("No se pudo recuperar ningun ID"); 
+        catch/*(Exception e)*/
+        { //Console.WriteLine("No se pudo recuperar ningun ID"); 
+            //Console.WriteLine(e.Message);
         }
         return n;
+    }
+    private void aumentarID()
+    {
+        string id_txt;
+        // lee archivo de id's
+        using (StreamReader sr = new StreamReader(s_AIDIS))
+        {
+            id_txt = sr.ReadToEnd();
+        }
+        string[] vID = id_txt.Split('\n');
+        // sobreescribe el archivo de id's
+        using (StreamWriter sw = new StreamWriter(s_AIDIS))
+        {
+            foreach (string ids in vID)
+            {
+                // solo guardamos las ids q no modificamos
+                if (ids != "" && ids.IndexOf("Poliza:") == -1)
+                {
+                    sw.WriteLine(ids);
+                }
+            }
+            // actualizamos las id titular
+            sw.WriteLine("Poliza:{0}", ID);
+        }
     }
 
     public void AgregarPoliza(Poliza P)
