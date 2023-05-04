@@ -54,3 +54,61 @@ agregarVehiculo.Ejecutar(new Vehiculo("Embargo","Audi",2019,2));
 
 Console.ReadKey();
 */
+
+
+//PARTE NICKY   ---->
+
+/*
+
+//creo el repositorio para titular
+RepoTitularTXT repoTitular = new RepoTitularTXT();
+
+//instancio el caso de uso de titular con mi repositorio
+EliminarTitularUseCase eliminarTitular = new EliminarTitularUseCase(repoTitular);
+ListarTitularesUseCase listarTitular = new ListarTitularesUseCase(repoTitular);
+
+//listarTitular.Ejecutar();
+
+Console.WriteLine("Eliminando el Titular con ID {0}",2);
+eliminarTitular.Ejecutar(3);
+
+
+List<Titular> listaTitular = listarTitular.Ejecutar();
+foreach(Titular elem in listaTitular){
+    Console.WriteLine(elem);
+}
+
+//----------------------------------------------------------
+
+RepoPolizaTXT repoPoliza = new RepoPolizaTXT();
+
+EliminarPolizaUseCase eliminarPoliza = new EliminarPolizaUseCase(repoPoliza);
+ListarPolizasUseCase listarPoliza = new ListarPolizasUseCase(repoPoliza);
+
+Console.WriteLine("Eliminando la Poliza con ID {0}",1);
+eliminarPoliza.Ejecutar(2);
+
+List<Poliza> listaPoliza = listarPoliza.Ejecutar();
+foreach(Poliza elem in listaPoliza){
+    Console.WriteLine(elem);
+}
+
+
+
+//------------------------------------------------------------
+
+RepoVehiculoTXT repoVehiculo = new RepoVehiculoTXT();
+
+EliminarVehiculoUseCase eliminarVehiculo = new EliminarVehiculoUseCase(repoVehiculo);
+ListarVehiculosUseCase listarVehiculo = new ListarVehiculosUseCase(repoVehiculo);
+
+Console.WriteLine("Eliminando el Vehiculo con ID {0}",2);
+eliminarVehiculo.Ejecutar(2);
+
+List<Vehiculo> listaVehiculo = listarVehiculo.Ejecutar();
+foreach(Vehiculo elem in listaVehiculo){
+    Console.WriteLine(elem);
+}
+
+*/
+
