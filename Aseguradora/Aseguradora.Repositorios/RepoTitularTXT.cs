@@ -4,32 +4,54 @@ using System.IO;
 
 public class RepoTitularTXT : IRepoTitular{
     static string s_Archivo {get;} = "Titulares.txt";
+    static string s_AIDIS {get;} = "AlmacenDeIds.txt";
     int ID {get;set;} = obtenerID();
-    static int obtenerID(){
+    private static int obtenerID(){
         /*
         Obtener ID restablece el contador de ID's si el programa se reinicia
         */
         int n=1;
         // el siguiente using solo se asegura de que aunque sea exista el archivo vacio
-        using (StreamWriter sw = new StreamWriter(s_Archivo, append: true)){}
+        using (StreamWriter sw = new StreamWriter(s_AIDIS, append: true)){}
         try{
             // abrir archivo de titulares
-            using (StreamReader sr = new StreamReader(s_Archivo)){
+            using (StreamReader sr = new StreamReader(s_AIDIS)){
                 string? l="";
+
                 // recorrerlo hasta el final
-                while (!sr.EndOfStream)
+                while (!sr.EndOfStream && l!=null &&l.IndexOf("Titular:")==-1)
                 {
                     l = sr.ReadLine();
                 }
                 // ID es lo primero que hay hasta el primer : asi q lo buscamos
-                int i = l!=null ? l.IndexOf(":") : -1;
+                int i = l!=null ? l.IndexOf("Titular:")+8 : -1;
                 // establecemos el valor de ID en la ultima econtrada +1
-                n = (l != null) && (i != -1) ? int.Parse(l.Substring(0, i)) + 1 : 1;
+                n = (l != null) && (i != -1) ? int.Parse(l.Substring(i).ReplaceLineEndings("")): 1;
             }
         }catch/*(Exception e)*/{ //Console.WriteLine("No se pudo recuperar ningun ID"); 
             //Console.WriteLine(e.Message);
         }
+        Console.WriteLine(n);
         return n;
+    }
+    private void aumentarID(){
+        string id_txt;
+        // lee archivo de id's
+        using (StreamReader sr = new StreamReader(s_AIDIS)){
+            id_txt = sr.ReadToEnd();
+        }
+        string [] vID = id_txt.Split('\n');
+        // sobreescribe el archivo de id's
+        using (StreamWriter sw = new StreamWriter(s_AIDIS)){
+            foreach(string ids in vID){
+                // solo guardamos las ids q no modificamos
+                if(ids != "" && ids.IndexOf("Titular:")==-1){
+                    sw.WriteLine(ids);
+                }
+            }
+            // actualizamos las id titular
+            sw.WriteLine("Titular:{0}",ID);
+        }
     }
 
     public void AgregarTitular(Titular T){
