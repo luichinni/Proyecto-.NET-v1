@@ -2,15 +2,10 @@ namespace Aseguradora.Aplicacion;
 
 public class Tercero : Persona
 {
-    public override int ID { get; set; }
-    public override int DNI { get; set; }
-    public override string Apellido { get; set; }
-    public override string Nombre { get; set; }
-    public string Aseguradora { get; set; }
-    public override string? Telefono { get; set; }
+    public string Aseguradora { get; set; } = "";
     public int Siniestro { get; set; }
 
-    public Tercero()
+    public Tercero(int dni, string apellido, string nombre):base(dni, apellido, nombre)
     {
         // ARMAR PARA PROXIMA ENTREGA
     }
