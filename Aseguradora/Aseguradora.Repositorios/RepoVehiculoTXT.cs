@@ -111,9 +111,9 @@ public class RepoVehiculoTXT : IRepoVehiculo
         }
     }
 
-    public void EliminarVehiculo(Vehiculo V)
+    public void EliminarVehiculo(int ID)
     {
-       try{
+        try{
             string texto;
             using(StreamReader sr = new StreamReader(s_Archivo) ){
                 texto = sr.ReadToEnd();
@@ -125,15 +125,17 @@ public class RepoVehiculoTXT : IRepoVehiculo
 
             if( indice != -1){
 
-                string [] vectorLineas = texto.Split("/n");
+                string [] vectorLineas = texto.Split("\n");
 
                 using(StreamWriter sw = new StreamWriter(s_Archivo) ){
 
-                    for(int i=0; i < vectorLineas.Count(); i++){
-                        //si no encunetro el elem a eliminar,lo agrego
-                        if(vectorLineas[i].IndexOf( ID.ToString() ) == -1){
-                            sw.WriteLine( vectorLineas[i] );
-                        }
+                    foreach(string linea in vectorLineas){
+                        int encontre = linea.IndexOf( ID.ToString()+":");
+
+                        //si mi linea no tiene el elem a eliminar ni es vacia la agrego
+                        if( ( encontre == -1)&&(linea != "") ) 
+                            //replace borra los saltos de linea que se encuentran en mi linea
+                            sw.WriteLine(linea.ReplaceLineEndings(""));
                     }
                 }
             }
@@ -143,7 +145,7 @@ public class RepoVehiculoTXT : IRepoVehiculo
         }
         catch(Exception e){
             Console.WriteLine( e.Message );
-        } 
+        }
     }
 
 
