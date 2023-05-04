@@ -108,98 +108,104 @@ public class RepoTitularTXT : IRepoTitular{
     }
     
     public void EliminarTitular(int ID){
-        try
-        {
+        try{
             //leo todo el archivo y lo guardo en texto
             string texto;
-            using (StreamReader sr = new StreamReader(s_Archivo))
-            {
+            using(StreamReader sr = new StreamReader(s_Archivo)){
                 texto = sr.ReadToEnd();
             }
 
+            Console.WriteLine(texto);
+
             //busco el titular, teniendo en cuenta el dni
             //IndexOf indica el índice de base cero de la primera aparición de un carácter Unicode especificado o de una cadena en la instancia en cuestión. El método devuelve -1, si el carácter o cadena no se encuentran en esta instancia. 
+
             int indice = texto.IndexOf( ID.ToString() );
 
             //si encontre el titular a borrar
-            if (indice != -1)
-            {
+            if(indice != -1){
                 //guardo en un vector el archivo donde c/pos tiene una linea 
-                string[] vector = texto.Split("/n");
+                //aca me guarda lineas vacias si es q hay
+                string [] vector = texto.Split("\n");
+
                 //abro el archivo para leer
-                using (StreamWriter sw = new StreamWriter(s_Archivo))
-                {
+                using(StreamWriter sw = new StreamWriter(s_Archivo)){
                     //recorro el vector y si encuentro el titular a borrar directamente no lo escribo en el texto
-                    for (int i = 0; i < vector.Count(); i++)
-                    {
-                        if (vector[i].IndexOf( ID.ToString() ) == -1)
-                            sw.WriteLine(vector[i]);
+                    foreach(string linea in vector){
+                        int encontre = linea.IndexOf( ID.ToString()+":" ) ;
+
+                        //SI NO LO ENCUENTRO LO ESCRIBO
+                        //me aseguro tmb d no escribir lineas vacias
+                        if( ( encontre == -1)&&(linea != "") ) 
+                            //replace borra los saltos de linea que se encuentran en mi linea
+                            sw.WriteLine(linea.ReplaceLineEndings(""));
                     }
                 }
             }
-            else
-            {
+            else{
                 throw new Exception($"No se encontro titular con ID = {ID} para eliminar");
             }
         }
-        catch (Exception e){
-            Console.WriteLine(e.Message);}
+        catch(Exception e){
+            Console.WriteLine(e.Message);
+
+        }
     }
+
 
     public List<Titular> ListarTitulares(){
         List<Titular> lista=new List<Titular>();
+
         string? linea;
         Titular t;
         using(StreamReader sr = new StreamReader(s_Archivo)){
-            while(! sr.EndOfStream){
-                linea = sr.ReadLine();
-                //esta bien si con ese string voy buscando campo x campo y asignandole esos 
+         while(! sr.EndOfStream){
+            linea = sr.ReadLine();
                  
-                string[]? vector = linea != null ? linea.Split(' ',':',',') : null;
+            string[]? vector = linea != null && linea != "" ? linea.Split(' ',':',',') : null;
+            
+            if(vector != null){
+                t = new Titular(int.Parse(vector[3]),vector[5],vector[7]){ID=int.Parse(vector[0])};
                 
-                if(vector != null){
-                    t = new Titular(int.Parse(vector[2]),vector[4],vector[6]){ID=int.Parse(vector[0])};
-                
-                    for(int i = 7; i < vector.Count(); i++){
-                        switch(vector[i]){
-                            case "Direccion":
-                                string aux;
-                                string campo = "";
-                                //estoy en la pos direccion asi q me interesa la siguiente
+                for(int i = 7; i < vector.Count(); i++){
+                    switch(vector[i]){
+                        case "Direccion":
+                            string aux;
+                            string campo = "";
+                            //estoy en la pos direccion asi q me interesa la siguiente
+                            i++;
+                            //tengo que leer el vector hasta que encuentre telefono o email
+                            aux = vector[i];
+
+                            while( ( aux != "Telefono")&&( aux != "Email")&&( aux != "ListaVehiculos") ){
+                                campo += aux+" "; 
                                 i++;
-                                //tengo que leer el vector hasta que encuentre telefono o email
                                 aux = vector[i];
+                            }
 
-                                while( ( aux != "Telefono")&&( aux != "Email")&&( aux != "ListaVehiculos") ){
-                                    campo += aux+" "; 
-                                    i++;
-                                    aux = vector[i];
-                                }
-
-                                t.Direccion = campo;
-                                break;  
-                            case "Telefono":
-                                i++;
-                                t.Telefono = vector[i];
-                                break;
-                            case "Email":
-                                i++;
-                                t.Email = vector[i];
-                                break;
-                            case "ListaVehiculos":
-                                //listaDeVehiculos es una lista<int>
-                                i++;
-                                List<int> listita = new List<int>();
-                                for(int j= i; i < vector.Count(); j++)
-                                    listita.Add(int.Parse(vector[j]));                     
-                                t.ListaVehiculos = listita;
-                                break;
-                        }
-
+                            t.Direccion = campo;
+                            break;  
+                        case "Telefono":
+                            i++;
+                            t.Telefono = vector[i];
+                            break;
+                        case "Email":
+                            i++;
+                            t.Email = vector[i];
+                            break;
+                        case "ListaVehiculos":
+                            //listaDeVehiculos es una lista<int>
+                            i++;
+                            List<int> listita = new List<int>();
+                            for(int j= i; i < vector.Count(); j++)
+                                listita.Add(int.Parse(vector[j]));
+                            t.ListaVehiculos = listita;
+                            break;
                     }
-                    lista.Add(t);
                 }
+                lista.Add(t);
             }
+         }
         }
         return lista;
     }
