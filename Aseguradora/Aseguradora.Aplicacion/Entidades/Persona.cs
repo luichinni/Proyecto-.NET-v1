@@ -2,9 +2,18 @@ namespace Aseguradora.Aplicacion;
 
 public abstract class Persona
 {
-    public abstract int ID { get; set; }
-    public abstract int DNI {get;set;}
-    public abstract string Apellido { get; set; }
-    public abstract string Nombre { get; set; }
-    public abstract string? Telefono { get; set; }
+    public int ID { get; set; }
+    public int DNI {get;set;}
+    public string Apellido { get; set; }
+    public string Nombre { get; set; }
+    public string? Telefono { get; set; }
+    public Persona(int dni, string apellido, string nombre){
+        DNI = dni;
+        Apellido = apellido;
+        Nombre = nombre;
+    }
+    public override string ToString()
+    {
+        return $"{ID}: DNI:{DNI} Apellido:{Apellido} Nombre:{Nombre}";
+    }
 }
