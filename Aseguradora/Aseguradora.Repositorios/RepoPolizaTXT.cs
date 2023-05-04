@@ -121,18 +121,20 @@ public class RepoPolizaTXT : IRepoPoliza
 
             //busco si existe el id
             //IndexOf solo trabaja con strings/char
+
             int indice = texto.IndexOf( ID.ToString() );
 
             if( indice != -1){
-
-                string [] vectorLineas = texto.Split("/n");
+                string [] vectorLineas = texto.Split("\n");
 
                 using(StreamWriter sw = new StreamWriter(s_Archivo) ){
+                    foreach(string linea in vectorLineas){
+                        int encontre = linea.IndexOf( ID.ToString()+":" ) ;
 
-                    for(int i=0; i < vectorLineas.Count(); i++){
-                        //si no encunetro el elem a eliminar,lo agrego
-                        if(vectorLineas[i].IndexOf( ID.ToString() ) == -1){
-                            sw.WriteLine( vectorLineas[i] );
+                        //si mi linea no tiene el elem a eliminar ni es vacia la agrego
+                        if( (encontre == -1)&&(linea != "")){
+                            //replace borra los saltos de linea que se encuentran en mi linea
+                            sw.WriteLine( linea.ReplaceLineEndings("") );
                         }
                     }
                 }
@@ -156,15 +158,17 @@ public class RepoPolizaTXT : IRepoPoliza
             while(! sr.EndOfStream ){
                 linea = sr.ReadLine();
 
-                string []? vector = linea != null ? linea.Split(' ',':'): null;
+                string []? vector = linea != null && linea != "" ? linea.Split(' ',':'): null;
 
                 if(vector != null){
                     //variables para instanciar depsues el objeto
                     int vehiculo = -1;
                     double valor = -1;
                     string franquicia= "",cobertura = "";
-                    DateTime desde = new DateTime(-1,-1,-1);
-                    DateTime hasta = new DateTime( -1,-1,-1);
+
+                    //'Year, Month, and Day parameters describe an un-representable DateTime.'
+                    DateTime desde = new DateTime();
+                    DateTime hasta = new DateTime();
 
                     for(int i=1; i < vector.Count(); i++){
                         switch(vector[i]){
@@ -203,18 +207,31 @@ public class RepoPolizaTXT : IRepoPoliza
                             case "VigenteDesde":
                                 //se usa el formato DateTime(Int32, Int32, Int32)->  año/mes/día
                                 i++;
+                                //-->guarda en la variable date time el string q esta en el vector dandole el formato año mes dia
+                                hasta = DateTime.ParseExact(vector[i],"d/M/yyyy", System.Globalization.CultureInfo.InvariantCulture); 
+
+                                /*
                                 string []? vectorDesde = vector[i] != null? vector[i].Split('/') : null;
                                 if( vectorDesde != null){
                                     desde = new DateTime(int.Parse(vectorDesde[0]),int.Parse(vectorDesde[1]),int.Parse(vectorDesde[2]));
                                 }
+                                */
+
                                 break;
+
                             case "VigenteHasta":
                                 //se usa el formato DateTime(Int32, Int32, Int32)->  año/mes/día
                                 i++;
+                                //-->guarda en la variable date time el string q esta en el vector dandole el formato año mes dia
+                                hasta = DateTime.ParseExact(vector[i],"d/M/yyyy", System.Globalization.CultureInfo.InvariantCulture); 
+                
+                                /*
                                 string []? vectorHasta = vector[i] != null? vector[i].Split('/') : null;
                                 if( vectorHasta != null){
                                     hasta = new DateTime(int.Parse(vectorHasta[0]),int.Parse(vectorHasta[1]),int.Parse(vectorHasta[2]));
                                 }
+                                */
+                                
                                 break;
                         }
                     }
@@ -225,6 +242,6 @@ public class RepoPolizaTXT : IRepoPoliza
                 }
             }
         }
-        return lista;
+     return lista;
     }
 }
