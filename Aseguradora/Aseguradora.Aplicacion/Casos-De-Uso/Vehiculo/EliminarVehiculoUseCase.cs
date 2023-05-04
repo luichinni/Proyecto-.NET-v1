@@ -6,8 +6,8 @@ public class EliminarVehiculoUseCase
     {
         _repo = repo;
     }
-    public void Ejecutar(Vehiculo V)
+    public void Ejecutar(int ID)
     {
-        _repo.EliminarVehiculo(V.ID);
+        _repo.EliminarVehiculo(ID);
     }
 }
