@@ -6,8 +6,8 @@ public class EliminarPolizaUseCase
     {
         _repo = repo;
     }
-    public void Ejecutar(Poliza P)
+    public void Ejecutar(int ID)
     {
-        _repo.EliminarPoliza(P.ID);
+        _repo.EliminarPoliza(ID);
     }
 }
