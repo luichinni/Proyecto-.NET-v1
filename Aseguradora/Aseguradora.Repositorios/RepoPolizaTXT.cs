@@ -73,6 +73,7 @@ public class RepoPolizaTXT : IRepoPoliza
                 P.ID = ID; // asignamos la ID
                 ID++; // incrementamos para la proxima
                 sw.WriteLine(P.ToString());
+                aumentarID();
             }
         }
         catch (Exception e)
