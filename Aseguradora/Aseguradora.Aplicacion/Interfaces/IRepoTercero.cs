@@ -3,6 +3,6 @@ public interface IRepoTercero
 {
     public void AgregarTercero(Tercero T);
     public void ModificarTercero(Tercero T);
-    public void EliminarTercero(int Id);
+    public void EliminarTercero(Tercero T);
     public List<Tercero> ListarTerceros();
 }
