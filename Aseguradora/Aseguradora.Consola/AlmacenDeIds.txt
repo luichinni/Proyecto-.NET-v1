@@ -1,0 +1,3 @@
+Titular:4
+Vehiculo:5
+Poliza:4

@@ -1,3 +1,3 @@
-1: Dominio:Robo Marca:Ford AnoFabricacion:2022 Titular:1
-2: Dominio:Prenda Marca:Mercedes AnoFabricacion:2020 Titular:1
-3: Dominio:Embargo Marca:Audi AnoFabricacion:2019 Titular:2
+2: Dominio:EF320DE Marca:Ford AnoFabricacion:2023 Titular:1
+3: Dominio:DRO 345 Marca:Ford AnoFabricacion:2010 Titular:1
+4: Dominio:ION 115 Marca:Mercedes AnoFabricacion:2014 Titular:3

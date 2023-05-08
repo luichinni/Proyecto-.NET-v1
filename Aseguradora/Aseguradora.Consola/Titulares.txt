@@ -1,3 +1,2 @@
-1: DNI:44130300 Apellido:Macias Nombre:Luciano
-2: DNI:44130303 Apellido:Loyola Nombre:Nicole
-3: DNI:44130304 Apellido:Suster Nombre:Laura
+1: DNI:27354200 Apellido:Suster Nombre:Laura Email:layu208@hotmail.com Vehiculos:2,3
+3: DNI:44130303 Apellido:Loyola Nombre:Nicole

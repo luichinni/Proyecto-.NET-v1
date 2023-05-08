@@ -1,3 +1,2 @@
-1: VehiculoAsegurado:1 ValorAsegurado:20000 Franquicia:1000 Cobertura:Todo Riesgo VigenteDesde:1/4/2023 VigenteHasta:1/4/2024
-2: VehiculoAsegurado:1 ValorAsegurado:40000 Franquicia:0 Cobertura:Todo Riesgo VigenteDesde:1/6/2023 VigenteHasta:1/6/2024
-3: VehiculoAsegurado:1 ValorAsegurado:20000 Franquicia:0 Cobertura:Todo Riesgo VigenteDesde:23/5/2023 VigenteHasta:23/5/2024
+2: VehiculoAsegurado:2 ValorAsegurado:10000 Franquicia:2500 Cobertura:Todo Riesgo VigenteDesde:14/3/2021 VigenteHasta:14/3/2025
+3: VehiculoAsegurado:3 ValorAsegurado:50000 Franquicia:15000  Cobertura:Todo Riesgo VigenteDesde:14/7/2019 VigenteHasta:14/7/2023
