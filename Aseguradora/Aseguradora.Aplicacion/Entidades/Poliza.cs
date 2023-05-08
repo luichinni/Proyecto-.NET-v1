@@ -2,7 +2,7 @@ namespace Aseguradora.Aplicacion;
 
 public class Poliza
 {
-    public int ID { get; set; }
+    public int ID { get; set; } = -1;
     public int VehiculoAsegurado { get; set; }
     public double ValorAsegurado { get; set; }
     public string Franquicia { get; set; }
