@@ -28,7 +28,7 @@ public class RepoPolizaTXT : IRepoPoliza
                     l = sr.ReadLine();
                 }
                 // ID es lo primero que hay hasta el primer : asi q lo buscamos
-                int i = l != null ? l.IndexOf("Poliza:")+7 : -1;
+                int i = l != null ? l.IndexOf("Poliza:") + 7 : -1;
                 // establecemos el valor de ID en la ultima econtrada +1
                 n = (l != null) && (i != -1) ? int.Parse(l.Substring(i).ReplaceLineEndings("")) : 1;
             }
@@ -56,7 +56,7 @@ public class RepoPolizaTXT : IRepoPoliza
                 // solo guardamos las ids q no modificamos
                 if (ids != "" && ids.IndexOf("Poliza:") == -1)
                 {
-                    sw.WriteLine(ids);
+                    sw.WriteLine(ids.ReplaceLineEndings(""));
                 }
             }
             // actualizamos las id titular
@@ -69,7 +69,8 @@ public class RepoPolizaTXT : IRepoPoliza
         try
         {
             // usamos append:true para que las lineas se escriban al final del archivo y no que se sobreescriba
-            using (StreamWriter sw = new StreamWriter(s_Archivo, append: true)){
+            using (StreamWriter sw = new StreamWriter(s_Archivo, append: true))
+            {
                 P.ID = ID; // asignamos la ID
                 ID++; // incrementamos para la proxima
                 sw.WriteLine(P.ToString());
@@ -89,7 +90,8 @@ public class RepoPolizaTXT : IRepoPoliza
         {
             // abrimos en modo lectura
             string str;
-            using (StreamReader sr = new StreamReader(s_Archivo)){
+            using (StreamReader sr = new StreamReader(s_Archivo))
+            {
                 // leemos todo el archivo
                 str = sr.ReadToEnd();
             }
@@ -116,10 +118,12 @@ public class RepoPolizaTXT : IRepoPoliza
                 // sobrescribimos el vehiculo viejo con el nuevo
                 polizas[indice] = P.ToString();
                 // rescribimos el archivo con el vehiculo modificado
-                using (StreamWriter sw = new StreamWriter(s_Archivo)){
+                using (StreamWriter sw = new StreamWriter(s_Archivo))
+                {
                     foreach (string poliza in polizas)
                     {
-                        if(poliza != ""){// solo vuelve a guardar los campos que tienen datos realmente
+                        if (poliza != "")
+                        {// solo vuelve a guardar los campos que tienen datos realmente
                             sw.WriteLine(poliza);
                         }
                     }
@@ -132,9 +136,12 @@ public class RepoPolizaTXT : IRepoPoliza
         }
         catch (Exception e)
         {
-            if(e.Message == $"No existe la poliza con ID: {P.ID}"){
+            if (e.Message == $"No existe la poliza con ID: {P.ID}")
+            {
                 throw e;
-            }else{
+            }
+            else
+            {
                 Console.WriteLine("RIP en Modificar Poliza");
                 Console.WriteLine(e.Message);
             }
@@ -143,38 +150,46 @@ public class RepoPolizaTXT : IRepoPoliza
 
     public void EliminarPoliza(int ID)
     {
-        try{
+        try
+        {
             string texto;
-            using(StreamReader sr = new StreamReader(s_Archivo) ){
+            using (StreamReader sr = new StreamReader(s_Archivo))
+            {
                 texto = sr.ReadToEnd();
             }
 
             //busco si existe el id
             //IndexOf solo trabaja con strings/char
 
-            int indice = texto.IndexOf( ID.ToString() );
+            int indice = texto.IndexOf(ID.ToString());
 
-            if( indice != -1){
-                string [] vectorLineas = texto.Split("\n");
+            if (indice != -1)
+            {
+                string[] vectorLineas = texto.Split("\n");
 
-                using(StreamWriter sw = new StreamWriter(s_Archivo) ){
-                    foreach(string linea in vectorLineas){
-                        int encontre = linea.IndexOf( ID.ToString()+":" ) ;
+                using (StreamWriter sw = new StreamWriter(s_Archivo))
+                {
+                    foreach (string linea in vectorLineas)
+                    {
+                        int encontre = linea.IndexOf(ID.ToString() + ":");
 
                         //si mi linea no tiene el elem a eliminar ni es vacia la agrego
-                        if( (encontre == -1)&&(linea != "")){
+                        if ((encontre == -1) && (linea != ""))
+                        {
                             //replace borra los saltos de linea que se encuentran en mi linea
-                            sw.WriteLine( linea.ReplaceLineEndings("") );
+                            sw.WriteLine(linea.ReplaceLineEndings(""));
                         }
                     }
                 }
             }
-            else{
+            else
+            {
                 throw new Exception($"No se encontro poliza con ID = {ID} para eliminar");
             }
         }
-        catch(Exception e){
-            Console.WriteLine( e.Message );
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
         }
     }
 
@@ -184,29 +199,34 @@ public class RepoPolizaTXT : IRepoPoliza
         List<Poliza> lista = new List<Poliza>();
 
         string? linea;
-        using(StreamReader sr = new StreamReader(s_Archivo)){
-            while(! sr.EndOfStream ){
+        using (StreamReader sr = new StreamReader(s_Archivo))
+        {
+            while (!sr.EndOfStream)
+            {
                 linea = sr.ReadLine();
 
-                string []? vector = linea != null && linea != "" ? linea.Split(' ',':'): null;
+                string[]? vector = linea != null && linea != "" ? linea.Split(' ', ':') : null;
 
-                if(vector != null){
+                if (vector != null)
+                {
                     //variables para instanciar depsues el objeto
                     int vehiculo = -1;
                     double valor = -1;
-                    string franquicia= "",cobertura = "";
+                    string franquicia = "", cobertura = "";
 
                     //'Year, Month, and Day parameters describe an un-representable DateTime.'
                     DateTime desde = new DateTime();
                     DateTime hasta = new DateTime();
 
-                    for(int i=1; i < vector.Count(); i++){
-                        switch(vector[i]){
+                    for (int i = 1; i < vector.Count(); i++)
+                    {
+                        switch (vector[i])
+                        {
                             case "VehiculoAsegurado":
                                 i++;
                                 vehiculo = int.Parse(vector[i]);
                                 break;
-                            
+
                             case "ValorAsegurado":
                                 i++;
                                 valor = int.Parse(vector[i]);
@@ -215,30 +235,32 @@ public class RepoPolizaTXT : IRepoPoliza
                                 i++;
                                 string auxF = "";
 
-                                while( ( vector[i] != "cobertura")&&( vector[i] != "VigenteDesde")&&( vector[i] != "VigenteHasta") ){
+                                while ((vector[i] != "Cobertura") && (vector[i] != "VigenteDesde") && (vector[i] != "VigenteHasta"))
+                                {
                                     auxF += vector[i] + " ";
                                     i++;
                                 }
-
+                                i--;
                                 franquicia = auxF;
-                                 break;
-                            
+                                break;
+
                             case "Cobertura":
                                 i++;
-                                string auxC ="";
+                                string auxC = "";
 
-                                while( ( vector[i] != "VigenteDesde")&&(vector[i] != "VigenteHasta") ){
+                                while ((vector[i] != "VigenteDesde") && (vector[i] != "VigenteHasta"))
+                                {
                                     auxC += vector[i] + " ";
                                     i++;
                                 }
-
+                                i--;
                                 cobertura = auxC;
                                 break;
                             case "VigenteDesde":
                                 //se usa el formato DateTime(Int32, Int32, Int32)->  año/mes/día
                                 i++;
                                 //-->guarda en la variable date time el string q esta en el vector dandole el formato año mes dia
-                                hasta = DateTime.ParseExact(vector[i],"d/M/yyyy", System.Globalization.CultureInfo.InvariantCulture); 
+                                desde = DateTime.ParseExact(vector[i], "d/M/yyyy", System.Globalization.CultureInfo.InvariantCulture);
 
                                 /*
                                 string []? vectorDesde = vector[i] != null? vector[i].Split('/') : null;
@@ -253,25 +275,25 @@ public class RepoPolizaTXT : IRepoPoliza
                                 //se usa el formato DateTime(Int32, Int32, Int32)->  año/mes/día
                                 i++;
                                 //-->guarda en la variable date time el string q esta en el vector dandole el formato año mes dia
-                                hasta = DateTime.ParseExact(vector[i],"d/M/yyyy", System.Globalization.CultureInfo.InvariantCulture); 
-                
+                                hasta = DateTime.ParseExact(vector[i], "d/M/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
                                 /*
                                 string []? vectorHasta = vector[i] != null? vector[i].Split('/') : null;
                                 if( vectorHasta != null){
                                     hasta = new DateTime(int.Parse(vectorHasta[0]),int.Parse(vectorHasta[1]),int.Parse(vectorHasta[2]));
                                 }
                                 */
-                                
+
                                 break;
                         }
                     }
-                    
-                    Poliza p = new Poliza(vehiculo,valor,franquicia,cobertura,desde,hasta){ID = int.Parse(vector[0])};
+
+                    Poliza p = new Poliza(vehiculo, valor, franquicia, cobertura, desde, hasta) { ID = int.Parse(vector[0]) };
 
                     lista.Add(p);
                 }
             }
         }
-     return lista;
+        return lista;
     }
 }

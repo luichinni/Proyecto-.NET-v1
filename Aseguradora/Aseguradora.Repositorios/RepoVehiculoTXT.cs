@@ -28,7 +28,7 @@ public class RepoVehiculoTXT : IRepoVehiculo
                     l = sr.ReadLine();
                 }
                 // ID es lo primero que hay hasta el primer : asi q lo buscamos
-                int i = l != null ? l.IndexOf("Vehiculo:")+9 : -1;
+                int i = l != null ? l.IndexOf("Vehiculo:") + 9 : -1;
                 // establecemos el valor de ID en la ultima econtrada +1
                 n = (l != null) && (i != -1) ? int.Parse(l.Substring(i).ReplaceLineEndings("")) : 1;
             }
@@ -56,7 +56,7 @@ public class RepoVehiculoTXT : IRepoVehiculo
                 // solo guardamos las ids q no modificamos
                 if (ids != "" && ids.IndexOf("Vehiculo:") == -1)
                 {
-                    sw.WriteLine(ids);
+                    sw.WriteLine(ids.ReplaceLineEndings(""));
                 }
             }
             // actualizamos las id titular
@@ -68,18 +68,37 @@ public class RepoVehiculoTXT : IRepoVehiculo
     {
         try
         {
-            // usamos append:true para que las lineas se escriban al final del archivo y no que se sobreescriba
-            using (StreamWriter sw = new StreamWriter(s_Archivo, append: true)){
-                V.ID = ID; // asignamos la ID
-                ID++; // incrementamos para la proxima
-                sw.WriteLine(V.ToString());
+            // abrimos el archivo en modo lectura para comprobar si existe el Vehiculo con ese dominio
+            string str;
+            using (StreamReader sr = new StreamReader(s_Archivo))
+            {
+                str = sr.ReadToEnd(); // leemos todo el archivo
+            }
+            int i = str.IndexOf(V.Dominio); // buscamos el Dominio
+            if (i != -1)
+            { // si ya existe lanzamos una excepcion
+                throw new Exception($"Ya existe Vehiculo con Dominio: {V.Dominio}");
+            }
+            else
+            { // si no existe lo agregamos
+              // usamos append:true para que las lineas se escriban al final del archivo y no que se sobreescriba
+                using (StreamWriter sw = new StreamWriter(s_Archivo, append: true))
+                {
+                    V.ID = ID; // asignamos la ID
+                    ID++; // incrementamos para la proxima
+                    sw.WriteLine(V.ToString());
+                }
                 aumentarID();
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("RIP en Agregar Vehiculo");
-            Console.WriteLine(e.Message);
+            if(e.Message == $"Ya existe Vehiculo con Dominio: {V.Dominio}"){
+                throw e;
+            }else{
+                Console.WriteLine("RIP en Agregar Vehiculo");
+                Console.WriteLine(e.Message);
+            }
         }
     }
 
@@ -89,12 +108,13 @@ public class RepoVehiculoTXT : IRepoVehiculo
         {
             // abrimos en modo lectura
             string str;
-            using (StreamReader sr = new StreamReader(s_Archivo)){
+            using (StreamReader sr = new StreamReader(s_Archivo))
+            {
                 // leemos todo el archivo
                 str = sr.ReadToEnd();
             }
             // comprobamos de forma general si existe la ID buscada
-            if (str.IndexOf(V.ID+":") != -1)
+            if (str.IndexOf(V.Dominio) != -1)
             {
                 // si existe buscamos la linea que le corresponde
                 string[] vehiculos = str.Split('\n');
@@ -107,19 +127,22 @@ public class RepoVehiculoTXT : IRepoVehiculo
                 int i = 0;
                 while (indice == -1)
                 {
-                    if (vehiculos[i].IndexOf(V.ID + ":") != -1)
+                    if (vehiculos[i].IndexOf(V.Dominio) != -1)
                     {
                         indice = i;
                     }
                     i++;
                 }
-                // sobrescribimos el vehiculo viejo con el nuevo
+                // sobrescribimos el vehiculo viejo con el nuevo luego de darle la id que corresponde
+                V.ID=int.Parse(vehiculos[indice].Substring(0,vehiculos[indice].IndexOf(":")));
                 vehiculos[indice] = V.ToString();
                 // rescribimos el archivo con el vehiculo modificado
-                using (StreamWriter sw = new StreamWriter(s_Archivo)){
+                using (StreamWriter sw = new StreamWriter(s_Archivo))
+                {
                     foreach (string vehiculo in vehiculos)
                     {
-                        if(vehiculo != ""){// solo vuelve a guardar los campos que tienen datos realmente
+                        if (vehiculo != "")
+                        {// solo vuelve a guardar los campos que tienen datos realmente
                             sw.WriteLine(vehiculo);
                         }
                     }
@@ -127,14 +150,17 @@ public class RepoVehiculoTXT : IRepoVehiculo
             }
             else
             {
-                throw new Exception($"No existe el vehiculo con ID: {V.ID}");
+                throw new Exception($"No existe el vehiculo con Dominio: {V.Dominio}");
             }
         }
         catch (Exception e)
         {
-            if(e.Message == $"No exise el vehiculo con ID: {V.ID}"){
+            if (e.Message == $"No exise el vehiculo con Dominio: {V.Dominio}")
+            {
                 throw e;
-            }else{
+            }
+            else
+            {
                 Console.WriteLine("RIP en Modificar Vehiculo");
                 Console.WriteLine(e.Message);
             }
@@ -143,38 +169,45 @@ public class RepoVehiculoTXT : IRepoVehiculo
 
     public void EliminarVehiculo(int ID)
     {
-        try{
+        try
+        {
             string texto;
-            using(StreamReader sr = new StreamReader(s_Archivo) ){
+            using (StreamReader sr = new StreamReader(s_Archivo))
+            {
                 texto = sr.ReadToEnd();
             }
 
             //busco si existe el id
             //IndexOf solo trabaja con strings/char
-            int indice = texto.IndexOf( ID.ToString() );
+            int indice = texto.IndexOf(ID.ToString());
 
-            if( indice != -1){
+            if (indice != -1)
+            {
 
-                string [] vectorLineas = texto.Split("\n");
+                string[] vectorLineas = texto.Split("\n");
 
-                using(StreamWriter sw = new StreamWriter(s_Archivo) ){
+                using (StreamWriter sw = new StreamWriter(s_Archivo))
+                {
 
-                    foreach(string linea in vectorLineas){
-                        int encontre = linea.IndexOf( ID.ToString()+":");
+                    foreach (string linea in vectorLineas)
+                    {
+                        int encontre = linea.IndexOf(ID.ToString() + ":");
 
                         //si mi linea no tiene el elem a eliminar ni es vacia la agrego
-                        if( ( encontre == -1)&&(linea != "") ) 
+                        if ((encontre == -1) && (linea != ""))
                             //replace borra los saltos de linea que se encuentran en mi linea
                             sw.WriteLine(linea.ReplaceLineEndings(""));
                     }
                 }
             }
-            else{
-                throw new Exception($"No existe el vehiculo con ID = { ID } para eliminar");
+            else
+            {
+                throw new Exception($"No existe el vehiculo con ID = {ID} para eliminar");
             }
         }
-        catch(Exception e){
-            Console.WriteLine( e.Message );
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
         }
     }
 
@@ -182,25 +215,30 @@ public class RepoVehiculoTXT : IRepoVehiculo
 
     public List<Vehiculo> ListarVehiculos()
     {
-        List<Vehiculo> lista=new List<Vehiculo>();
+        List<Vehiculo> lista = new List<Vehiculo>();
         string? linea;
-        
-        using(StreamReader sr = new StreamReader(s_Archivo)){
-            while(! sr.EndOfStream){
+
+        using (StreamReader sr = new StreamReader(s_Archivo))
+        {
+            while (!sr.EndOfStream)
+            {
                 linea = sr.ReadLine();
 
-                string []? vector = linea != null ? linea.Split(' ',':') : null;
+                string[]? vector = linea != null ? linea.Split(' ', ':') : null;
 
-                if(vector != null){
+                if (vector != null)
+                {
                     //no puedo usar el constructor porque mis primeras variables del texto son string con dimension variable
                     //el id se que esta en el principio
 
                     //LAS INSTANCIE CON UN VALOR X,ESTA BIEN ??????????????????
-                    string dominio="",marca ="";
-                    int ano=-1,titular= -1;
-
-                    for(int i=1; i < vector.Count(); i++){
-                        switch(vector[i]){
+                    string dominio = "", marca = "";
+                    int ano = -1, titular = -1;
+                    for (int i = 1; i < vector.Count(); i++)
+                    {
+                        //Console.WriteLine(vector[i]);
+                        switch (vector[i])
+                        {
                             case "Dominio":
                                 i++;
                                 string auxD;
@@ -208,11 +246,13 @@ public class RepoVehiculoTXT : IRepoVehiculo
                                 //en aux me va quedando los campos q voy leyendo del vector
                                 auxD = vector[i];
                                 //si lo que leo pertenece a dominio lo voy agregando al string
-                                while( ( auxD != "Marca")&&( auxD != "AnoFabricacion")&&( auxD != "Titular") ){
-                                    campoD += auxD+" "; 
+                                while ((auxD != "Marca") && (auxD != "AnoFabricacion") && (auxD != "Titular"))
+                                {
+                                    campoD += auxD + " ";
                                     i++;
                                     auxD = vector[i];
                                 }
+                                i--;
                                 dominio = campoD;
                                 break;
 
@@ -221,11 +261,13 @@ public class RepoVehiculoTXT : IRepoVehiculo
                                 string auxM;
                                 string campoM = "";
                                 auxM = vector[i];
-                                while(( auxM != "AnoFabricacion")&&( auxM != "Titular") ){
-                                    campoM += auxM+" "; 
+                                while ((auxM != "AnoFabricacion") && (auxM != "Titular"))
+                                {
+                                    campoM += auxM + " ";
                                     i++;
                                     auxM = vector[i];
                                 }
+                                i--;
                                 marca = campoM;
                                 break;
 
@@ -239,9 +281,9 @@ public class RepoVehiculoTXT : IRepoVehiculo
                                 titular = int.Parse(vector[i]);
                                 break;
                         }
-                       
+
                     }
-                    Vehiculo v = new Vehiculo(dominio,marca,ano,titular){ID=int.Parse(vector[0])};
+                    Vehiculo v = new Vehiculo(dominio, marca, ano, titular) { ID = int.Parse(vector[0]) };
 
                     lista.Add(v);
                 }
