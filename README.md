@@ -12,7 +12,7 @@ Vehiculo:7
 Al instanciar los repositorios, el contador recupera la última ID para poder seguir persistiendo entidades de manera coherente.
 Las entidades, interfaces y casos de uso se encuentran en la biblioteca de clases Aseguradora.Aplicacion, a su vez, las interfaces de los repositorios se encuentran implementadas en Aseguradora.Repositorios.
 
-##Cómo usar los métodos implementados
+## Cómo usar los métodos implementados
 En la cabecera del archivo program.cs que se encuentra en Aseguradora.Consola (o donde usemos las clases creadas), se debe especificar el namespace al que pertenecen dichas clases y repositorios, siendo en este caso Aseguradora.Aplicacion y Aseguradora.Repositorios.
 ```C#
 using Aseguradora.Repositorio;
